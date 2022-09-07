@@ -10,18 +10,9 @@ function print(text) {
  * чтобы функция sayHello работала корректно
  */
 function isValid(name) {
-  if (name && name.length >= 4 && notContansSpaces(name)) {
+  if (name && name.length >= 4 && !name.includes(' ')) {
     return true;
   } else return false;
-}
-
-function notContansSpaces(name) {
-  for (let i = 0; i < name.length; i++) {
-    if (name.charAt(i) === ' ') {
-      return false;
-    }
-  }
-  return true;
 }
 
 function sayHello() {
