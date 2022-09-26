@@ -16,7 +16,6 @@ function initCarousel() {
     carouselInner.style.transform = `translateX(${carouselTransform}px)`;
     clickCounter += 1;
     checkCounter();
-    console.log(carouselTransform);
   })
 
   leftButton.addEventListener('click', () => {
@@ -24,7 +23,6 @@ function initCarousel() {
     carouselInner.style.transform = `translateX(${carouselTransform}px)`;
     clickCounter -= 1;
     checkCounter();
-    console.log(carouselTransform);
   })
 
   function checkCounter() {
