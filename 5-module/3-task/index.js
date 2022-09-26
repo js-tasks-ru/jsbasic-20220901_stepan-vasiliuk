@@ -30,11 +30,11 @@ function initCarousel() {
   function checkCounter() {
     if (clickCounter >= slides.length - 1) {
       rightButton.style.display = 'none';
-      leftButton.style.display = '';
+      //leftButton.style.display = '';
     }
     else if (clickCounter == 0) {
       leftButton.style.display = 'none';
-      rightButton.style.display = '';
+      //rightButton.style.display = '';
     }
     else {
       leftButton.style.display = '';
