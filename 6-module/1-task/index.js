@@ -28,27 +28,15 @@ export default class UserTable {
 
   #elemRender() {
     const elem = this.#createElement();
-    let newButtons = elem.getElementsByTagName('button');
-     const buttons = elem.querySelectorAll('button');
-     const tableRows = elem.querySelectorAll('tr');
-    // console.log(newButtons);
-    // console.log(tableRows);
-    for (let i = 0; i < newButtons.length; i++) {
-      newButtons[i].addEventListener('click', () => {
-         newButtons[i].parentElement.parentElement.removeChild.
-        //  console.log(newButtons);
-        //  console.log(tableRows);
-        //elem.rows[i+1].style.display = 'none', {once: true}
-        //elem.removeChild(elem.fi);
-        elem.deleteRow(i + 1);
-      }
-      )
-    }
+    const buttons = elem.querySelectorAll('button');
+
+    buttons.forEach(button => {
+      button.addEventListener('click', () => button.parentElement.parentElement.remove()
+        , { once: true });
+
+    });
+
     return elem;
-  }
-
-  #deleteRows() {
-
   }
 
   #headTemplate() {
@@ -79,6 +67,4 @@ export default class UserTable {
     );
     return tableBody += '</tbody>';
   }
-
-
 }
