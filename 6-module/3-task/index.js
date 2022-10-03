@@ -4,13 +4,14 @@ export default class Carousel {
   elem = null;
   constructor(slides) {
     this.slides = slides;
-    this.#createElement();
-    this.#initCarousel();
-    this.#addListeners();
+    this.#render();
   }
 
-  #createElement() {
+  #render() {
     this.elem = createElement(this.#carouselTemplate());
+    this.#initCarousel();
+    this.#checkCounter();
+    this.#addListeners();
   }
 
   #carouselTemplate() {
@@ -41,7 +42,8 @@ export default class Carousel {
           </button>
        </div>
     </div>
-    `
+    `;
+
     });
     return carouselString;
   }
@@ -51,9 +53,9 @@ export default class Carousel {
     this.leftButton = this.elem.querySelector('.carousel__arrow_left');
     this.carouselInner = this.elem.querySelector('.carousel__inner');
     this.carouselSlide = this.elem.querySelectorAll('.carousel__slide');
+    this.carouselButtons = this.elem.querySelectorAll('.carousel__button');
     this.clickCounter = 0;
     this.carouselTransform = 0;
-    this.#checkCounter();
   }
 
   #addListeners() {
@@ -64,7 +66,10 @@ export default class Carousel {
       if (event.target.closest('.carousel__arrow_left')) {
         this.#previousSlide();
       }
-      this.#checkCounter();
+    }
+    )
+    this.carouselButtons.forEach((button) => {
+      button.addEventListener('click', this.#onCarouselButtonClick);
     })
   }
 
@@ -72,6 +77,7 @@ export default class Carousel {
     this.carouselTransform -= this.#getOffSetSize(this.carouselInner);
     this.carouselInner.style.transform = `translateX(${this.carouselTransform}px)`;
     this.clickCounter += 1;
+    this.#checkCounter();
   }
 
 
@@ -79,6 +85,7 @@ export default class Carousel {
     this.carouselTransform += this.#getOffSetSize(this.carouselInner);
     this.carouselInner.style.transform = `translateX(${this.carouselTransform}px)`;
     this.clickCounter -= 1;
+    this.#checkCounter();
   }
 
 
@@ -96,4 +103,12 @@ export default class Carousel {
   }
 
   #getOffSetSize(elem) { return elem.offsetWidth };
+
+  #onCarouselButtonClick = (eOb) => {
+    const eventObject = new CustomEvent('product-add', {
+      bubbles: true,
+      detail: eOb.target.closest('.carousel__slide').dataset.id,
+    });
+    this.elem.dispatchEvent(eventObject);
+  }
 }
