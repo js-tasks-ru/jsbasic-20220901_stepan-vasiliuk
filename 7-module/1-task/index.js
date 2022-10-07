@@ -2,6 +2,7 @@ import createElement from "../../assets/lib/create-element.js";
 
 export default class RibbonMenu {
   elem = null;
+
   constructor(categories) {
     this.categories = categories;
     this.#render();
@@ -56,8 +57,8 @@ export default class RibbonMenu {
   };
 
   #itemCheckStyles(eventObject) {
-    this.ribbonItems.forEach((item) =>{
-      if(item.classList.contains('ribbon__item_active')){
+    this.ribbonItems.forEach((item) => {
+      if (item.classList.contains('ribbon__item_active')) {
         item.classList.remove('ribbon__item_active');
       }
     });
@@ -68,8 +69,6 @@ export default class RibbonMenu {
     let scrollLeft = this.ribbonInner.scrollLeft;
     let scrollRight =
       this.ribbonInner.scrollWidth - scrollLeft - this.ribbonInner.clientWidth;
-    console.log("Scrollleft: " + scrollLeft);
-    console.log("Scrollright: " + scrollRight);
     if (scrollLeft < 1) {
       if (this.arrowLeft.classList.contains("ribbon__arrow_visible")) {
         this.arrowLeft.classList.remove("ribbon__arrow_visible");
@@ -110,7 +109,7 @@ export default class RibbonMenu {
 
   #categoriesTemplate() {
     let stringToReturn = "";
-    this.categories.forEach(({ id, name }) => {
+    this.categories.forEach(({id, name}) => {
       stringToReturn += `
       <a href="#" class="ribbon__item" data-id="${id}">${name}</a>`;
     });
