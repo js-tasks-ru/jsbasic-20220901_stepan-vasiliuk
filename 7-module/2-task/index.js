@@ -5,11 +5,20 @@ export default class Modal {
     this.#render();
   }
 
+  #render() {
+    this.elem = createElement(this.#template());
+    this.#initElements();
+    this.#addListeners();
+  }
+
   setTitle(title) {
     this.modalTitle.textContent = title;
   }
 
   setBody(element) {
+    while (this.modalBody.firstChild) {
+      this.modalBody.removeChild(this.modalBody.firstChild);
+    }
     this.modalBody.insertAdjacentElement('afterbegin', element);
   }
 
@@ -18,27 +27,47 @@ export default class Modal {
     document.body.classList.toggle('is-modal-open');
   }
 
-  #render() {
-    this.elem = createElement(this.#template());
-    this.#initElements();
-  }
-
   #initElements() {
     this.modalTitle = this.elem.querySelector('.modal__title');
     this.modalBody = this.elem.querySelector('.modal__body');
     this.container = document.body.querySelector('.container');
+    this.closeButton = this.elem.querySelector('.modal__close');
   }
+
+  #close() {
+    if (this.container.contains(this.elem)) {
+      this.container.removeChild(this.elem);
+      document.body.classList.toggle('is-modal-open');
+      document.body.removeEventListener('keydown', this.#onEscPressing);
+    }
+  }
+
+  #addListeners() {
+    this.elem.addEventListener('click',
+      (event) => {
+        if (event.target.closest('.modal__close')) {
+          this.#close();
+        }
+      }
+    );
+    document.body.addEventListener('keydown', this.#onEscPressing);
+  }
+
+  #onEscPressing = (keyDownEvent) => {
+    if (keyDownEvent.code === 'Escape') {
+      console.log('Нажата Esc');
+      this.#close();
+    }
+  };
 
   #template() {
     return `
-  <!--Корневой элемент Modal-->
   <div class="modal">
-    <!--Прозрачная подложка перекрывающая интерфейс-->
     <div class="modal__overlay"></div>
 
     <div class="modal__inner">
       <div class="modal__header">
-        <!--Кнопка закрытия модального окна-->
+
         <button type="button" class="modal__close">
           <img src="/assets/images/icons/cross-icon.svg" alt="close-icon" />
         </button>
