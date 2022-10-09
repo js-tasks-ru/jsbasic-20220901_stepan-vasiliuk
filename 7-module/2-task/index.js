@@ -24,7 +24,7 @@ export default class Modal {
 
   open() {
     document.body.prepend(this.elem);
-    document.body.classList.toggle("is-modal-open");
+    document.body.classList.add("is-modal-open");
   }
 
   #initElements() {
@@ -36,7 +36,7 @@ export default class Modal {
 
   close() {
     this.elem.remove();
-    document.body.classList.toggle("is-modal-open");
+    document.body.classList.remove("is-modal-open");
     document.body.removeEventListener("keydown", this.#onEscPressing);
   }
 
