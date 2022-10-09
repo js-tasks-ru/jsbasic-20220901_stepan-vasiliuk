@@ -1,4 +1,4 @@
-﻿import createElement from '../../assets/lib/create-element.js';
+﻿import createElement from "../../assets/lib/create-element.js";
 
 export default class Modal {
   constructor() {
@@ -19,44 +19,39 @@ export default class Modal {
     while (this.modalBody.firstChild) {
       this.modalBody.removeChild(this.modalBody.firstChild);
     }
-    this.modalBody.insertAdjacentElement('afterbegin', element);
+    this.modalBody.insertAdjacentElement("afterbegin", element);
   }
 
   open() {
-    this.container.append(this.elem);
-    document.body.classList.toggle('is-modal-open');
+    document.body.prepend(this.elem);
+    document.body.classList.toggle("is-modal-open");
   }
 
   #initElements() {
-    this.modalTitle = this.elem.querySelector('.modal__title');
-    this.modalBody = this.elem.querySelector('.modal__body');
-    this.container = document.body.querySelector('.container');
-    this.closeButton = this.elem.querySelector('.modal__close');
+    this.modalTitle = this.elem.querySelector(".modal__title");
+    this.modalBody = this.elem.querySelector(".modal__body");
+    this.container = document.body.querySelector(".container");
+    this.closeButton = this.elem.querySelector(".modal__close");
   }
 
-  #close() {
-    if (this.container.contains(this.elem)) {
-      this.container.removeChild(this.elem);
-      document.body.classList.toggle('is-modal-open');
-      document.body.removeEventListener('keydown', this.#onEscPressing);
-    }
+  close() {
+    this.elem.remove();
+    document.body.classList.toggle("is-modal-open");
+    document.body.removeEventListener("keydown", this.#onEscPressing);
   }
 
   #addListeners() {
-    this.elem.addEventListener('click',
-      (event) => {
-        if (event.target.closest('.modal__close')) {
-          this.#close();
-        }
+    this.elem.addEventListener("click", (event) => {
+      if (event.target.closest(".modal__close")) {
+        this.close();
       }
-    );
-    document.body.addEventListener('keydown', this.#onEscPressing);
+    });
+    document.body.addEventListener("keydown", this.#onEscPressing);
   }
 
   #onEscPressing = (keyDownEvent) => {
-    if (keyDownEvent.code === 'Escape') {
-      console.log('Нажата Esc');
-      this.#close();
+    if (keyDownEvent.code === "Escape") {
+      this.close();
     }
   };
 
