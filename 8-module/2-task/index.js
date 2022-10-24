@@ -15,6 +15,7 @@ export default class ProductGrid {
   }
 
   #initElements() {
+    this.containerRoot = document.querySelector('#container');
     this.innerGrid = this.elem.querySelector(".products-grid__inner");
   }
 
@@ -39,7 +40,6 @@ export default class ProductGrid {
     //this.elem = null;
 
     let filteredProducts = this.products;
-    let speciesBefore = this.filters.maxSpiciness;
 
     for (const [key, value] of Object.entries(filters)) {
       this.filters[key] = value;
@@ -55,9 +55,7 @@ export default class ProductGrid {
       if (key === "noNuts" && value === true) {
         filteredProducts = this.#filterByNuts(filteredProducts);
       }
-      if (key === "maxSpiciness" && value !== speciesBefore) {
         filteredProducts = this.#filterBySpices(filteredProducts);
-      }
     }
 
     this.#filteredRender(filteredProducts);
@@ -71,7 +69,7 @@ export default class ProductGrid {
       let productCard = new ProductCard(product);
       this.innerGrid.append(productCard.elem);
     });
-    container.append(this.elem);
+    this.containerRoot.append(this.elem);
   }
 
   #filterBySoups(listToBeFiltered) {
