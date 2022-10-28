@@ -15,7 +15,6 @@ export default class ProductGrid {
   }
 
   #initElements() {
-    this.containerRoot = document.querySelector('#container');
     this.innerGrid = this.elem.querySelector(".products-grid__inner");
   }
 
@@ -36,58 +35,57 @@ export default class ProductGrid {
 
   updateFilter(filters) {
     this.#initFilters();
-    this.elem.remove();
-    //this.elem = null;
-
-    let filteredProducts = this.products;
 
     for (const [key, value] of Object.entries(filters)) {
       this.filters[key] = value;
     }
 
+    let filteredProducts = this.products;
+
     for (const [key, value] of Object.entries(this.filters)) {
       if (key === "vegeterianOnly" && value === true) {
         filteredProducts = this.#filterByVegeterian(filteredProducts);
       }
-      if (key === "category" && value === 'soups') {
-        filteredProducts = this.#filterBySoups(filteredProducts);
+      if (key === "category" && value !== "") {
+        filteredProducts = this.#filterByCategory(filteredProducts, value);
       }
       if (key === "noNuts" && value === true) {
         filteredProducts = this.#filterByNuts(filteredProducts);
       }
-        filteredProducts = this.#filterBySpices(filteredProducts);
+      if (key === "maxSpiciness") {
+        filteredProducts = this.#filterBySpices(filteredProducts, value);
+      }
     }
-
     this.#filteredRender(filteredProducts);
-
+    console.log("стал ткой:" + filteredProducts.length);
   }
 
   #filteredRender(filteredProducts) {
-    this.elem = createElement(this.#mainTemplate());
-    this.#initElements();
-    filteredProducts.forEach((product) => {
-      let productCard = new ProductCard(product);
-      this.innerGrid.append(productCard.elem);
-    });
-    this.containerRoot.append(this.elem);
+    let innerElements = filteredProducts
+      .map((product) => {
+        return new ProductCard(product).elem.outerHTML;
+      })
+      .join("");
+    this.innerGrid.innerHTML = innerElements;
   }
 
-  #filterBySoups(listToBeFiltered) {
-    return listToBeFiltered.filter(({category}) => category === 'soups');
+  #filterByCategory(listToBeFiltered, value) {
+    return listToBeFiltered.filter(
+      ({category}) => category === value);
   }
 
   #filterByNuts(listToBeFiltered) {
     return listToBeFiltered.filter(({nuts}) => !nuts);
   }
 
-  #filterBySpices(listToBeFiltered) {
-    return listToBeFiltered.filter(({spiciness}) => spiciness <= this.filters.maxSpiciness);
+  #filterBySpices(listToBeFiltered, value) {
+    return listToBeFiltered.filter(
+      ({spiciness}) => spiciness <= value
+    );
   }
 
   #filterByVegeterian(listToBeFiltered) {
-    let filtered = listToBeFiltered.filter(({vegeterian}) =>
-      vegeterian);
-    return filtered;
+    return listToBeFiltered.filter(({vegeterian}) => vegeterian);
   }
 
   #initFilters() {
@@ -96,11 +94,10 @@ export default class ProductGrid {
         noNuts: false,
         vegeterianOnly: false,
         maxSpiciness: 4,
-        category: '',
+        category: "",
       };
-      console.log('Filter initialized');
     } else {
-      console.log('Filters already exists');
+      return;
     }
   }
 }
