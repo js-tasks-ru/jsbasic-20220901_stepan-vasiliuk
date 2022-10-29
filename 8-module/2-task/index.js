@@ -57,7 +57,6 @@ export default class ProductGrid {
       }
     }
     this.#filteredRender(filteredProducts);
-    console.log("стал ткой:" + filteredProducts.length);
   }
 
   #filteredRender(filteredProducts) {
