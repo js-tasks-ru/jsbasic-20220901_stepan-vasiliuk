@@ -13,30 +13,51 @@ export default class Cart {
   }
 
   addProduct(product) {
-    // СКОПИРУЙТЕ СЮДЯ СВОЙ КОД
+    if (!product) {
+      return;
+    }
+
+    const itemIndex = this.cartItems.findIndex(cartItem => cartItem.product == product);
+    if (itemIndex < 0) {
+      this.cartItems.push({
+        product: product,
+        count: 1,
+      });
+    } else {
+      this.cartItems[itemIndex].count += 1;
+    }
+    this.onProductUpdate(this.cartItems[itemIndex]);
   }
 
   updateProductCount(productId, amount) {
-    // СКОПИРУЙТЕ СЮДЯ СВОЙ КОД
+    const itemIndex = this.cartItems.findIndex(cartItem => cartItem.product.id == productId);
+    this.cartItems[itemIndex].count += amount;
+    if (this.cartItems[itemIndex].count <= 0) {
+      this.cartItems.splice(itemIndex, 1);
+    }
+    this.onProductUpdate(this.cartItems[itemIndex]);
   }
 
   isEmpty() {
-    // СКОПИРУЙТЕ СЮДЯ СВОЙ КОД
+    return !this.cartItems.length ? true : false;
   }
 
   getTotalCount() {
-    // СКОПИРУЙТЕ СЮДЯ СВОЙ КОД
+    let count = 0;
+    this.cartItems.forEach(item => count += item.count);
+    return count;
   }
 
   getTotalPrice() {
-    // СКОПИРУЙТЕ СЮДЯ СВОЙ КОД
+    let totalPrice = 0;
+    this.cartItems.forEach(item => totalPrice += item.product.price * item.count);
+    return totalPrice;
   }
 
   renderProduct(product, count) {
     return createElement(`
-    <div class="cart-product" data-product-id="${
-      product.id
-    }">
+    <div class="cart-product" data-product-id="${product.id
+      }">
       <div class="cart-product__img">
         <img src="/assets/images/products/${product.image}" alt="product">
       </div>
@@ -74,8 +95,8 @@ export default class Cart {
           <div class="cart-buttons__info">
             <span class="cart-buttons__info-text">total</span>
             <span class="cart-buttons__info-price">€${this.getTotalPrice().toFixed(
-              2
-            )}</span>
+      2
+    )}</span>
           </div>
           <button type="submit" class="cart-buttons__button btn-group__button button">order</button>
         </div>
@@ -84,7 +105,32 @@ export default class Cart {
   }
 
   renderModal() {
-    // ...ваш код
+    const modalWindow = new Modal();
+    modalWindow.setTitle('Вот такое вот:');
+    modalWindow.setBody(this.cartInnerTemplate());
+    document.body.addEventListener('click', this.onCountButtonClick)
+
+    modalWindow.open();
+  }
+
+  cartInnerTemplate() {
+    let cartInner = createElement('<div></div>');
+
+    this.cartItems.forEach((item) => {
+      cartInner.append(this.renderProduct(item.product, item.count))
+    })
+    console.log(cartInner);
+    return cartInner;
+  }
+
+  onCountButtonClick = (event) => {
+    console.log(event);
+    if (event.target.closest('.cart-counter__button_minus')) {
+      this.updateProductCount(event.target.closest('.cart-product').dataset.productId, -1);
+    }
+    if (event.target.closest('.cart-counter__button_plus')) {
+      this.updateProductCount(event.target.closest('.cart-product').dataset.productId, 1);
+    }
   }
 
   onProductUpdate(cartItem) {

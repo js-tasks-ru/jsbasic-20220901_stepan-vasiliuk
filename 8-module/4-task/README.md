@@ -21,7 +21,7 @@
 Возвращает верстку этого товара, для показа в корзине:
 
 ```js
-// createElement - вспомогательная функция для создание элемента
+// createElement - вспомогательная функция для создания элемента
 
 renderProduct(product, count) {
     return createElement(`
