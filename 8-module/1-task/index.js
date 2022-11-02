@@ -60,16 +60,15 @@ export default class CartIcon {
         document.documentElement.clientWidth - this.elem.offsetWidth - 10
       ) + "px";
 
-      let checkInitial = () => {
-        if (this.initialPosition !== null) {
-          return this.initialPosition;
-        } else {
-          this.initialPosition =
-            this.elem.getBoundingClientRect().top + window.pageYOffset;
-            return this.initialPosition;
-        }
+    let checkInitial = () => {
+      if (this.initialPosition !== null) {
+        return this.initialPosition;
+      } else {
+        this.initialPosition =
+          this.elem.getBoundingClientRect().top + window.pageYOffset;
+        return this.initialPosition;
       }
-
+    };
 
     if (window.pageYOffset > checkInitial()) {
       Object.assign(this.elem.style, {
@@ -90,6 +89,5 @@ export default class CartIcon {
     function isMobile() {
       return document.documentElement.clientWidth <= 767;
     }
-    
   }
 }
