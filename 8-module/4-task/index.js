@@ -32,12 +32,22 @@ export default class Cart {
   updateProductCount(productId, amount) {
     const itemIndex = this.cartItems.findIndex(cartItem => cartItem.product.id == productId);
     this.cartItems[itemIndex].count += amount;
-    if (this.cartItems[itemIndex].count <= 0) {
+
+    let elementToUpdate = null;
+
+    if (this.cartItems[itemIndex].count === 0) {
       let removedItems = this.cartItems.splice(itemIndex, 1);
+
+      //elementToUpdate = removedItems[0];
+
       this.onProductUpdate(removedItems[0]);
     } else {
       this.onProductUpdate(this.cartItems[itemIndex]);
+
+      //elementToUpdate = this.cartItems[itemIndex];
+
     }
+    //this.onProductUpdate(elementToUpdate);
   }
 
   isEmpty() {
@@ -135,7 +145,7 @@ export default class Cart {
       cartInner.append(this.renderProduct(item.product, item.count))
     })
     cartInner.append(this.renderOrderForm());
-    
+
     return cartInner;
   }
 
@@ -164,8 +174,12 @@ export default class Cart {
 
   #cartItemRemove(cartItem) {
     let modalBody = document.querySelector('.modal__body');
+    let allProductsPrice = modalBody.querySelector(`.cart-buttons__info-price`);
     let itemToRemove = modalBody.querySelector(`[data-product-id="${cartItem.product.id}"]`);
+
     itemToRemove.parentNode.removeChild(itemToRemove);
+    allProductsPrice.innerHTML = `€${(this.getTotalPrice()).toFixed(2)}`;
+
   }
 
   #cartBodyUpdating(cartItem) {
