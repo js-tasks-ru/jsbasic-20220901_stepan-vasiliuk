@@ -135,12 +135,11 @@ export default class Cart {
       cartInner.append(this.renderProduct(item.product, item.count))
     })
     cartInner.append(this.renderOrderForm());
-    console.log(cartInner);
+    
     return cartInner;
   }
 
   onCountButtonClick = (event) => {
-    console.log(event);
     if (event.target.closest('.cart-counter__button_minus')) {
       this.updateProductCount(event.target.closest('.cart-product').dataset.productId, -1);
     }
