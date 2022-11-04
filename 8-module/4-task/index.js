@@ -33,9 +33,11 @@ export default class Cart {
     const itemIndex = this.cartItems.findIndex(cartItem => cartItem.product.id == productId);
     this.cartItems[itemIndex].count += amount;
     if (this.cartItems[itemIndex].count <= 0) {
-      this.cartItems.splice(itemIndex, 1);
+      let removedItems = this.cartItems.splice(itemIndex, 1);
+      this.onProductUpdate(removedItems[0]);
+    } else {
+      this.onProductUpdate(this.cartItems[itemIndex]);
     }
-    this.onProductUpdate(this.cartItems[itemIndex]);
   }
 
   isEmpty() {
@@ -105,12 +107,13 @@ export default class Cart {
   }
 
   renderModal() {
-    const modalWindow = new Modal();
-    modalWindow.setTitle('Вот такое вот:');
-    modalWindow.setBody(this.cartInnerTemplate());
+    this.modalWindow = new Modal();
+    this.modalWindow.setTitle('Вот такое вот:');
+    this.modalWindow.setBody(this.cartInnerTemplate());
+    //this.modalElement = document.querySelector('.modal');
     document.body.addEventListener('click', this.onCountButtonClick)
 
-    modalWindow.open();
+    this.modalWindow.open();
   }
 
   cartInnerTemplate() {
@@ -119,6 +122,7 @@ export default class Cart {
     this.cartItems.forEach((item) => {
       cartInner.append(this.renderProduct(item.product, item.count))
     })
+    cartInner.append(this.renderOrderForm());
     console.log(cartInner);
     return cartInner;
   }
@@ -134,9 +138,34 @@ export default class Cart {
   }
 
   onProductUpdate(cartItem) {
-    // ...ваш код
+    if (document.body.classList.contains('is-modal-open')) {
+      if (this.isEmpty()) {
+        this.modalWindow.close();
+      } else if (cartItem.count === 0) {
+        this.#cartItemRemove(cartItem);
+      } else {
+        this.#cartBodyUpdating(cartItem);
+      }
+    }
 
     this.cartIcon.update(this);
+  }
+
+  #cartItemRemove(cartItem) {
+    let modalBody = document.querySelector('.modal__body');
+    let itemToRemove = modalBody.querySelector(`[data-product-id="${cartItem.product.id}"]`);
+    itemToRemove.parentNode.removeChild(itemToRemove);
+  }
+
+  #cartBodyUpdating(cartItem) {
+    let modalBody = document.querySelector('.modal__body');
+    let productCount = modalBody.querySelector(`[data-product-id="${cartItem.product.id}"] .cart-counter__count`);
+    let productPrice = modalBody.querySelector(`[data-product-id="${cartItem.product.id}"] .cart-product__price`);
+    let allProductsPrice = modalBody.querySelector(`.cart-buttons__info-price`);
+
+    productCount.innerHTML = cartItem.count;
+    productPrice.innerHTML = `€${(cartItem.product.price * cartItem.count).toFixed(2)}`;
+    allProductsPrice.innerHTML = `€${(this.getTotalPrice()).toFixed(2)}`;
   }
 
   onSubmit(event) {
