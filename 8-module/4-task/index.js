@@ -108,12 +108,24 @@ export default class Cart {
 
   renderModal() {
     this.modalWindow = new Modal();
-    this.modalWindow.setTitle('Вот такое вот:');
+    this.modalWindow.setTitle('Your order');
     this.modalWindow.setBody(this.cartInnerTemplate());
-    //this.modalElement = document.querySelector('.modal');
-    document.body.addEventListener('click', this.onCountButtonClick)
 
     this.modalWindow.open();
+
+    this.#initElements();
+    this.#addListeners();
+  }
+
+  #addListeners() {
+    document.body.addEventListener('click', this.onCountButtonClick);
+    this.form.addEventListener('submit', (event) => this.onSubmit(event));
+  }
+
+  #initElements() {
+    //this.modalElement = document.querySelector('.modal');
+    this.form = document.querySelector('.cart-form');
+    this.submitButton = this.form.querySelector('button[type="submit"]');
   }
 
   cartInnerTemplate() {
@@ -169,8 +181,34 @@ export default class Cart {
   }
 
   onSubmit(event) {
-    // ...ваш код
-  };
+    event.preventDefault();
+    this.submitButton.classList.toggle('is-loading');
+
+    const formData = new FormData(this.form);
+    const fetchPromise = fetch('https://httpbin.org/post', {
+      method: 'POST',
+      body: formData,
+    });
+
+    fetchPromise.then(() => {
+      this.modalWindow.setTitle('Success!');
+      this.cartItems.splice(0, this.cartItems.length);
+      this.modalWindow.setBody(this.#successBodyTemplate());
+      this.cartIcon.update(this);
+    })
+
+  }
+
+  #successBodyTemplate() {
+    let modalBodyInner = createElement(`
+    <div class="modal__body-inner">
+      <p>Order successful! Your order is being cooked :) <br>
+        We’ll notify you about delivery time shortly.<br>
+        <img src="/assets/images/delivery.gif"></p>
+    </div>
+    `)
+    return modalBodyInner;
+  }
 
   addEventListeners() {
     this.cartIcon.elem.onclick = () => this.renderModal();
