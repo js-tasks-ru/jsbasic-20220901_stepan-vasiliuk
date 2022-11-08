@@ -33,7 +33,7 @@ export default class Cart {
     const itemIndex = this.cartItems.findIndex(cartItem => cartItem.product.id == productId);
     this.cartItems[itemIndex].count += amount;
 
-    let elementToUpdate = null;
+    //let elementToUpdate = null;
 
     if (this.cartItems[itemIndex].count === 0) {
       let removedItems = this.cartItems.splice(itemIndex, 1);
@@ -62,7 +62,7 @@ export default class Cart {
 
   getTotalPrice() {
     let totalPrice = 0;
-    this.cartItems.forEach(item => totalPrice += item.product.price * item.count);
+    this.cartItems.forEach(item => totalPrice += (item.product.price * item.count));
     return totalPrice;
   }
 
