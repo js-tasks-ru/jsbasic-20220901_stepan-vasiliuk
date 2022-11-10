@@ -24,20 +24,21 @@ export default class Main {
     try {
       const response = await fetch('products.json');
       this.products = await response.json();
-      console.log(this.products);
     } catch (error) {
       console.log('Unable to get products list from server');
     }
 
+    this.#productsGridRender();
+    this.#initFilters();
+    this.#addEventListeners();
+  }
+
+  #productsGridRender() {
     this.productsGrid = new ProductsGrid(this.products);
     while (this.dataProductsHolder.firstChild) {
       this.dataProductsHolder.removeChild(this.dataProductsHolder.firstChild);
     }
     this.dataProductsHolder.append(this.productsGrid.elem);
-
-    this.#initFilters();
-    this.#addEventListeners();
-
   }
 
   #initElements() {
@@ -97,12 +98,12 @@ export default class Main {
   }
 
   #onChange = (event) => {
-    if(event.target.closest('#nuts-checkbox')){
+    if (event.target.closest('#nuts-checkbox')) {
       this.productsGrid.updateFilter({
         noNuts: event.target.checked,
       })
     }
-    if(event.target.closest('#vegeterian-checkbox')){
+    if (event.target.closest('#vegeterian-checkbox')) {
       this.productsGrid.updateFilter({
         vegeterianOnly: event.target.checked,
       })
