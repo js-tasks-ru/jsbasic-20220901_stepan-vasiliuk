@@ -9,7 +9,6 @@ export default class ProductCard {
   #render() {
     this.elem = createElement(this.#template(this.product));
     const cardButton = this.elem.querySelector('.card__button');
-    console.log('Before clickInit');
     cardButton.onclick = this.#onCardButtonClick;
   }
 
@@ -18,7 +17,6 @@ export default class ProductCard {
       detail: this.product.id,
       bubbles: true,
     });
-    console.log(event);
     document.body.dispatchEvent(event);
   }
 
