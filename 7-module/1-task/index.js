@@ -12,6 +12,7 @@ export default class RibbonMenu {
     this.elem = createElement(this.#elementTemplate());
     this.#initElements();
     this.ribbonInner.firstElementChild.classList.add("ribbon__item_active");
+
     this.#onRibbonScroll();
     this.#addlisteners();
   }
@@ -65,6 +66,16 @@ export default class RibbonMenu {
     eventObject.target.closest('.ribbon__item').classList.add('ribbon__item_active');
   }
 
+  getActiveCategory() {
+    let activeCategory = '';
+    this.ribbonItems.forEach((item) => {
+      if (item.classList.contains('ribbon__item_active')) {
+        activeCategory = item.dataset.id;
+      }
+    });
+    return activeCategory;
+  }
+
   #onRibbonScroll = () => {
     let scrollLeft = this.ribbonInner.scrollLeft;
     let scrollRight =
@@ -109,7 +120,7 @@ export default class RibbonMenu {
 
   #categoriesTemplate() {
     let stringToReturn = "";
-    this.categories.forEach(({id, name}) => {
+    this.categories.forEach(({ id, name }) => {
       stringToReturn += `
       <a href="#" class="ribbon__item" data-id="${id}">${name}</a>`;
     });
