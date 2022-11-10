@@ -11,7 +11,7 @@ export default class ProductGrid {
   #render() {
     this.elem = createElement(this.#mainTemplate());
     this.#initElements();
-    this.#productsTemplate();
+    this.#productsTemplate(this.products);
   }
 
   #initElements() {
@@ -26,8 +26,9 @@ export default class ProductGrid {
     </div>`;
   }
 
-  #productsTemplate() {
-    this.products.forEach((product) => {
+  #productsTemplate(products) {
+    this.innerGrid.innerHTML = '';
+    products.forEach((product) => {
       let productCard = new ProductCard(product);
       this.innerGrid.append(productCard.elem);
     });
@@ -56,35 +57,27 @@ export default class ProductGrid {
         filteredProducts = this.#filterBySpices(filteredProducts, value);
       }
     }
-    this.#filteredRender(filteredProducts);
-  }
-
-  #filteredRender(filteredProducts) {
-    let innerElements = filteredProducts
-      .map((product) => {
-        return new ProductCard(product).elem.outerHTML;
-      })
-      .join("");
-    this.innerGrid.innerHTML = innerElements;
+    console.log(filteredProducts);
+    this.#productsTemplate(filteredProducts);
   }
 
   #filterByCategory(listToBeFiltered, value) {
     return listToBeFiltered.filter(
-      ({category}) => category === value);
+      ({ category }) => category === value);
   }
 
   #filterByNuts(listToBeFiltered) {
-    return listToBeFiltered.filter(({nuts}) => !nuts);
+    return listToBeFiltered.filter(({ nuts }) => !nuts);
   }
 
   #filterBySpices(listToBeFiltered, value) {
     return listToBeFiltered.filter(
-      ({spiciness}) => spiciness <= value
+      ({ spiciness }) => spiciness <= value
     );
   }
 
   #filterByVegeterian(listToBeFiltered) {
-    return listToBeFiltered.filter(({vegeterian}) => vegeterian);
+    return listToBeFiltered.filter(({ vegeterian }) => vegeterian);
   }
 
   #initFilters() {

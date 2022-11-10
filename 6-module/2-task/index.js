@@ -17,10 +17,10 @@ export default class ProductCard {
       detail: this.product.id,
       bubbles: true,
     });
-    this.elem.dispatchEvent(event);
+    document.body.dispatchEvent(event);
   }
 
-  #template({ name, price, image}) {
+  #template({ name, price, image }) {
     return `
     <div class="card">
     <div class="card__top">
